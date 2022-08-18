@@ -5,18 +5,8 @@ Site backends for Figures in Tahoe.
 from django.contrib.sites import shortcuts as django_sites_shortcuts
 from rest_framework.exceptions import PermissionDenied
 
-from organizations.models import Organization
 from figures import permissions as figures_permissions
-
-
-def get_site_by_uuid(site_uuid):
-    """
-    Get a Site by its organization's UUID.
-    """
-    # TODO: Refactor to use the `tahoe-sites` package.
-    #       https://github.com/appsembler/tahoe-figures-plugins/issues/3
-    org = Organization.objects.get(edx_uuid=site_uuid)
-    return org.sites.get()  # Get a single site or fail.
+from tahoe_sites.api import get_site_by_uuid
 
 
 def get_current_site_or_by_uuid(request):

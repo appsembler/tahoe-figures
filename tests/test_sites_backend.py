@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites import shortcuts
 from rest_framework.exceptions import PermissionDenied
 
-from organizations.models import Organization
+from tahoe_sites.api import create_tahoe_site
 
 from tahoe_figures_plugins.sites import get_current_site_or_by_uuid
 
@@ -38,19 +38,15 @@ def test_no_uuid(request_factory, fake_current_site):
 
 @pytest.mark.django_db
 def test_with_uuid_permitted(request_factory, fake_current_site):
-    uuid = 'a000000b-1234-11ec-8db5-1cccccccccc2'
+    info = create_tahoe_site(domain='other-site.com', short_name='OSC')
     request = request_factory.get('/figures/api', data={
-        'site_uuid': uuid,
+        'site_uuid': info['site_uuid'],
     })
     request.user = User(is_staff=True, is_active=True)
 
-    other_site = Site.objects.create(domain='other-site.com')
-    org = Organization.objects.create(name='other', edx_uuid=uuid)
-    org.sites.add(other_site)
-
     site = get_current_site_or_by_uuid(request)
     assert site != fake_current_site
-    assert site == other_site
+    assert site == info['site']
 
 
 @pytest.mark.django_db
