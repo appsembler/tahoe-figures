@@ -1,6 +1,6 @@
 # Core
 Django>=2.2,<2.3
-djangorestframework==3.11.2
+djangorestframework==3.15.2
 
 # Tahoe requirements
 # TODO: Replace with tahoe-sites and edx-organizations==5.2.0 (https://github.com/appsembler/tahoe-figures-plugins/issues/3)
